@@ -14,6 +14,8 @@ class User(db.Model):
 
 
 class Document(db.Model):
+    __tablename__ = 'document'
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     owner_id = db.Column(db.Integer, nullable=False)
     name = db.Column(db.String(), unique=True, nullable=False)
@@ -32,6 +34,8 @@ class Document(db.Model):
         self.date = date
 
 class Report(db.Model):
+    __tablename__ = 'report'
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     document_id = db.Column(db.Integer, nullable=False)
     data = db.Column(JSON, nullable=False, server_default='{}')
