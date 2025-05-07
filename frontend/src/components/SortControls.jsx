@@ -14,18 +14,22 @@ export default function SortControls() {
   const [sortOrder, setSortOrder] = useState("asc"); // "asc" or "desc"
 
   function handleSubmit(e) {
-    // Prevent the browser from reloading the page
     e.preventDefault();
-    // Read the form data
-    const form = e.target;
-    const formData = new FormData(form);
-    // // You can pass formData as a fetch body directly:
-    // fetch("/some-api", { method: form.method, body: formData });
-    const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson);
+
+    const sortData = {
+      sortBy: selectedSortParam,
+      order: sortOrder,
+    };
+
     if (selectedSortParam === "sortByNumOfWord") {
-      console.log(word);
+      sortData.word = word;
     }
+
+    if (selectedSortParam === "sortBySegment") {
+      sortData.segment = selectedSegment;
+    }
+
+    console.log("Sort request:", sortData);
   }
   return (
     <Form inline="true" onSubmit={handleSubmit} className="mb-3">
@@ -34,16 +38,22 @@ export default function SortControls() {
           variant="outline-secondary"
           title={
             {
-              sortByNumOfChar: "По символам",
-              sortByNumOfWord: "По слову",
-              sortBySegment: "По сегменту",
+              sortByNumOfChar: "По колличеству символов",
+              sortByNumOfWord: "По встречаемости слова",
+              sortBySegment: "По встречаемости сегмента",
             }[selectedSortParam]
           }
           onSelect={(v) => setSelectedSortParam(v)}
         >
-          <Dropdown.Item eventKey="sortByNumOfChar">По символам</Dropdown.Item>
-          <Dropdown.Item eventKey="sortByNumOfWord">По слову</Dropdown.Item>
-          <Dropdown.Item eventKey="sortBySegment">По сегменту</Dropdown.Item>
+          <Dropdown.Item eventKey="sortByNumOfChar">
+            По колличеству символов
+          </Dropdown.Item>
+          <Dropdown.Item eventKey="sortByNumOfWord">
+            По встречаемости слова
+          </Dropdown.Item>
+          <Dropdown.Item eventKey="sortBySegment">
+            По встречаемости сегмента
+          </Dropdown.Item>
         </DropdownButton>
 
         {selectedSortParam === "sortByNumOfWord" && (

@@ -9,8 +9,10 @@ function App() {
     <Container className="py-4">
       <UploadForm />
       <SearchBar />
-      <SortControls />
-      <DocumentTable />
+      <div className="mt-3 p-3 border rounded bg-light">
+        <SortControls />
+        <DocumentTable />
+      </div>
     </Container>
   );
 }

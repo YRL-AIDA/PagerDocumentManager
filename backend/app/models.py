@@ -21,6 +21,7 @@ class Document(db.Model):
     name = db.Column(db.String(), unique=True, nullable=False)
     status = db.Column(db.String(), default="UPLOADED")
     date = db.Column(db.Date, nullable = False)
+    comment = db.Column(db.String(), nullable=False)
 
     __table_args__ = (
         db.CheckConstraint(status.in_(['UPLOADED', 'QUEUED', 'PROCESSING', 'PROCESSED', 'ERROR']), name='document_status'),
