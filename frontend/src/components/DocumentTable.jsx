@@ -1,17 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 
 export default function DocumentTable() {
   const [sortConfig, setSortConfig] = useState({ key: "name", dir: "asc" });
-  const data = [
-    { name: "Doc 1", date: new Date(2025, 4, 1), comm: "some comment" },
-    { name: "Doc 2", date: new Date(2025, 4, 1), comm: "some comment" },
-    // …
-  ];
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5001/api/documents")
+      .then((res) => res.json())
+      .then((json) => setData(json))
+      .catch(console.error);
+  }, []);
 
   const sorted = [...data].sort((a, b) => {
     const { key, dir } = sortConfig;
-    let cmp = a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0;
+    let av = a[key],
+      bv = b[key];
+    if (key === "date") {
+      av = new Date(a.date);
+      bv = new Date(b.date);
+    }
+    let cmp = av < bv ? -1 : av > bv ? 1 : 0;
     return dir === "asc" ? cmp : -cmp;
   });
 
@@ -26,7 +35,7 @@ export default function DocumentTable() {
     <Table hover striped bordered size="sm">
       <thead>
         <tr>
-          {["name", "date", "comm"].map((key) => (
+          {["name", "date", "comment"].map((key) => (
             <th
               key={key}
               onClick={() => sort(key)}
@@ -36,7 +45,7 @@ export default function DocumentTable() {
                 {
                   name: "Имя",
                   date: "Дата",
-                  comm: "Комментарий",
+                  comment: "Комментарий",
                 }[key]
               }
               {sortConfig.key === key
@@ -52,8 +61,8 @@ export default function DocumentTable() {
         {sorted.map((doc, i) => (
           <tr key={i}>
             <td>{doc.name}</td>
-            <td>{doc.date.toLocaleDateString("ru-RU")}</td>
-            <td>{doc.comm}</td>
+            <td>{new Date(doc.date).toLocaleDateString("ru-RU")}</td>
+            <td>{doc.comment}</td>
           </tr>
         ))}
       </tbody>

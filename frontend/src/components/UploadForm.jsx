@@ -2,12 +2,12 @@ import { useState } from "react";
 import axios from "axios";
 import { Form, Button, ProgressBar, Alert, InputGroup } from "react-bootstrap";
 
-export default function UploadForm() {
+export default function UploadForm(props) {
   const [files, setFiles] = useState(null);
   const [progress, setProgress] = useState(0);
   const [status, setMsg] = useState(null);
 
-  function sendToApi(base64) {
+  function sendToApi(base64, name) {
     setMsg({ variant: "info", text: "Загрузка..." });
     const body = { image64: base64, process: "{}" };
 
@@ -18,8 +18,9 @@ export default function UploadForm() {
           setProgress(Math.round((e.loaded / e.total) * 100)),
       })
       .then((res) => {
+        const json = JSON.parse(res.data);
         setMsg({ variant: "success", text: "Успешно" });
-        console.log(res);
+        props.addToDataBase(json, name);
       })
       .catch((err) => {
         setMsg({ variant: "danger", text: "Ошибка отправки" });
@@ -35,9 +36,9 @@ export default function UploadForm() {
     const file = files[0];
     const reader = new FileReader();
     reader.onload = () => {
-      const dataUrl = reader.result;
-      const base64 = dataUrl.split(",")[1];
-      sendToApi(base64);
+      const base64 = reader.result;
+      // const base64 = dataUrl;
+      sendToApi(base64, file.name);
     };
     reader.onerror = () => {
       setMsg({ variant: "danger", text: "Ошибка чтения файла" });
