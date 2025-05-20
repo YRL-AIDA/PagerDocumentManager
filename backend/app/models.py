@@ -1,4 +1,5 @@
 from sqlalchemy import JSON, ForeignKeyConstraint
+from sqlalchemy.dialects.postgresql import CITEXT
 from app.database import db
 
 class User(db.Model):

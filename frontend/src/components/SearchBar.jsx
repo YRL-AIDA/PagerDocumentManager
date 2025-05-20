@@ -10,7 +10,11 @@ import {
   Alert,
 } from "react-bootstrap";
 
-export default function SearchBar() {
+export default function SearchBar({
+  onSearch,
+  onLabelsChange,
+  onParamsChange,
+}) {
   const [q, setQ] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [value, setValue] = useState();
@@ -23,6 +27,12 @@ export default function SearchBar() {
 
   const handleChangeParam = (par) => {
     setParam(par);
+  };
+
+  const handleReset = () => {
+    setQ("");
+    setMsg({ variant: "secondary", text: "Поиск сброшен" });
+    onSearch("");
   };
 
   const handleSubmit = (e) => {
@@ -58,7 +68,9 @@ export default function SearchBar() {
       };
     }
 
-    console.log("Search request:", searchData);
+    onSearch(q.trim());
+    onLabelsChange(value || []);
+    onParamsChange(param || []);
   };
 
   return (
@@ -80,6 +92,9 @@ export default function SearchBar() {
             style={{ width: "10%" }}
           >
             Поиск
+          </Button>
+          <Button variant="outline-secondary" onClick={handleReset}>
+            Сброс
           </Button>
         </InputGroup>
         {status && (

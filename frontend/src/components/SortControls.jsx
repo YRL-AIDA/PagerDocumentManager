@@ -7,29 +7,23 @@ import {
   Dropdown,
 } from "react-bootstrap";
 
-export default function SortControls() {
-  const [selectedSortParam, setSelectedSortParam] = useState("sortByNumOfChar");
+export default function SortControls(props) {
+  const [selectedSortParam, setSelectedSortParam] = useState("sortByName");
   const [selectedSegment, setSelectedSegment] = useState("header");
   const [word, setWord] = useState("");
   const [sortOrder, setSortOrder] = useState("asc"); // "asc" or "desc"
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    const sortData = {
-      sortBy: selectedSortParam,
-      order: sortOrder,
-    };
-
+    const sortData = { sortBy: selectedSortParam, order: sortOrder };
     if (selectedSortParam === "sortByNumOfWord") {
       sortData.word = word;
     }
-
     if (selectedSortParam === "sortBySegment") {
       sortData.segment = selectedSegment;
     }
 
-    console.log("Sort request:", sortData);
+    props.onSortChange(sortData);
   }
   return (
     <Form inline="true" onSubmit={handleSubmit} className="mb-3">
@@ -38,6 +32,9 @@ export default function SortControls() {
           variant="outline-secondary"
           title={
             {
+              sortByName: "По названию документа",
+              sortByDate: "По дате",
+              sortByComment: "По комментарию",
               sortByNumOfChar: "По колличеству символов",
               sortByNumOfWord: "По встречаемости слова",
               sortBySegment: "По встречаемости сегмента",
@@ -45,6 +42,11 @@ export default function SortControls() {
           }
           onSelect={(v) => setSelectedSortParam(v)}
         >
+          <Dropdown.Item eventKey="sortByName">
+            По названию документа
+          </Dropdown.Item>
+          <Dropdown.Item eventKey="sortByDate">По дате</Dropdown.Item>
+          <Dropdown.Item eventKey="sortByComment">По комментарию</Dropdown.Item>
           <Dropdown.Item eventKey="sortByNumOfChar">
             По колличеству символов
           </Dropdown.Item>
@@ -72,7 +74,7 @@ export default function SortControls() {
                 text: "Текст",
                 list: "Список",
                 table: "Таблица",
-                img: "Изображение",
+                figure: "Изображение",
               }[selectedSegment]
             }
             onSelect={(v) => setSelectedSegment(v)}
@@ -81,7 +83,7 @@ export default function SortControls() {
             <Dropdown.Item eventKey="text">Текст</Dropdown.Item>
             <Dropdown.Item eventKey="list">Список</Dropdown.Item>
             <Dropdown.Item eventKey="table">Таблица</Dropdown.Item>
-            <Dropdown.Item eventKey="img">Изображение</Dropdown.Item>
+            <Dropdown.Item eventKey="figure">Изображение</Dropdown.Item>
           </DropdownButton>
         )}
 

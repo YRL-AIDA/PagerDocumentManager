@@ -70,7 +70,7 @@ export default function UploadForm(props) {
           {status.text}
         </Alert>
       )}
-      {progress > 0 && <ProgressBar now={progress} label={`${progress}%`} />}
+      {/* {progress > 0 && <ProgressBar now={progress} label={`${progress}%`} />} */}
     </Form>
   );
 }
