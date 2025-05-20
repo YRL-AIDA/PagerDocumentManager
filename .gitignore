@@ -4,3 +4,4 @@ venv/
 temp/
 media
 .idea
+backend/app/uploads/
