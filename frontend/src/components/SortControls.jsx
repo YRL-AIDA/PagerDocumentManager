@@ -11,7 +11,7 @@ export default function SortControls(props) {
   const [selectedSortParam, setSelectedSortParam] = useState("sortByName");
   const [selectedSegment, setSelectedSegment] = useState("header");
   const [word, setWord] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc"); // "asc" or "desc"
+  const [sortOrder, setSortOrder] = useState("desc"); // "asc" or "desc"
 
   function handleSubmit(e) {
     e.preventDefault();

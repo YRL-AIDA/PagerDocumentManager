@@ -13,6 +13,11 @@ export default defineConfig({
         secure: false,
         // rewrite: path => path.replace(/^\/processing/, '/processing')
       },
+      "/api": {
+        target: "http://localhost:5001", // Порт, где работает Flask
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });

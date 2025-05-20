@@ -1,72 +1,124 @@
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
 import UploadForm from "./components/UploadForm";
 import SearchBar from "./components/SearchBar";
 import SortControls from "./components/SortControls";
 import DocumentTable from "./components/DocumentTable";
-import { Container } from "react-bootstrap";
-import axios from "axios";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
+import { Container, Button, Navbar, Nav } from "react-bootstrap";
 import { useState, useEffect } from "react";
 
-function App() {
+function MainApp() {
+  const { user, logout } = useAuth();
   const [search, setSearch] = useState("");
   const [labels, setLabels] = useState([]);
-  const [refreshToggle, setRefreshToggle] = useState(false);
+  const [searchParams, setSearchParams] = useState([]);
   const [sortOptions, setSortOptions] = useState({
     sortBy: "",
-    order: "asc",
+    order: "desc",
     word: "",
     segment: "header",
   });
-  const [searchParams, setSearchParams] = useState([]);
+  const [refreshToggle, setRefreshToggle] = useState(false);
 
   const triggerRefresh = () => setRefreshToggle((r) => !r);
-  function addToDataBase(json, name) {
+
+  function addToDataBase(json, name, image64) {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth();
-    const day = now.getDate();
+    const date = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
     const body = {
-      date: `${year}-${month + 1}-${day}`,
-      owner_id: 1,
+      date,
+      owner_id: user.id,
       name: name,
       status: "UPLOADED",
       json: json,
+      image64: image64,
     };
-    console.log(json);
-    fetch("http://localhost:5001/api/documents", {
+    fetch("/api/documents", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
+      credentials: "include",
     })
       .then((res) => {
         triggerRefresh();
         console.log(res);
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      .catch(console.error);
   }
+
   return (
-    <Container className="py-4">
-      <UploadForm addToDataBase={addToDataBase} />
-      <SearchBar
-        onSearch={setSearch}
-        onLabelsChange={setLabels}
-        onParamsChange={setSearchParams}
-      />
-      <div className="mt-3 p-3 border rounded bg-light">
-        <SortControls onSortChange={setSortOptions} />
-        <DocumentTable
-          search={search}
-          labels={labels}
-          sortOptions={sortOptions}
-          searchParams={searchParams}
-          refreshToggle={refreshToggle}
+    <>
+      <Navbar bg="light" className="mb-3">
+        <Container>
+          <Navbar.Brand>Документы</Navbar.Brand>
+          <Nav className="ms-auto">
+            <Navbar.Text className="me-3">{user.username}</Navbar.Text>
+            <Button variant="outline-danger" size="sm" onClick={logout}>
+              Выйти
+            </Button>
+          </Nav>
+        </Container>
+      </Navbar>
+
+      <Container>
+        <UploadForm addToDataBase={addToDataBase} />
+        <SearchBar
+          onSearch={setSearch}
+          onLabelsChange={setLabels}
+          onParamsChange={setSearchParams}
         />
-      </div>
-    </Container>
+        <div className="mt-3 p-3 border rounded bg-light">
+          <SortControls onSortChange={setSortOptions} />
+          <DocumentTable
+            search={search}
+            labels={labels}
+            searchParams={searchParams}
+            sortOptions={sortOptions}
+            refreshToggle={refreshToggle}
+          />
+        </div>
+      </Container>
+    </>
   );
 }
 
-export default App;
+function AppRoutes() {
+  const { user, loading } = useAuth();
+  if (loading) return <div>Загрузка...</div>;
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/auth/login"
+          element={user ? <Navigate to="/" /> : <LoginForm />}
+        />
+        <Route
+          path="/auth/register"
+          element={user ? <Navigate to="/" /> : <RegisterForm />}
+        />
+        <Route
+          path="/"
+          element={user ? <MainApp /> : <Navigate to="/auth/login" />}
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
+  );
+}
