@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_cors import CORS
@@ -19,11 +19,16 @@ def create_app():
     
     login_manager = LoginManager()
     login_manager.init_app(app)
-    login_manager.login_view = 'api.login'  
+    login_manager.login_view = 'auth.login' 
+    login_manager.login_message = None 
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+    
+    @login_manager.unauthorized_handler
+    def on_unauthorized():
+        return jsonify({"message": "Unauthorized"}), 401
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(docs_bp)

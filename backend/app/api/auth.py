@@ -6,7 +6,7 @@ from app.database import db
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
-@auth_bp.route('register', methods=['POST'])
+@auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
     username = data.get('username')
@@ -23,6 +23,8 @@ def register():
     u = User(username=username, password_hash=password_hash)
     db.session.add(u)
     db.session.commit()
+
+    login_user(u)
 
     return jsonify({'username': u.username}), 200
 
