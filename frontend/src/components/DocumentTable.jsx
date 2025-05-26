@@ -16,7 +16,6 @@ export default function DocumentTable({
   const [showModal, setShowModal] = useState(false);
   const [modalImageUrl, setModalImageUrl] = useState("");
 
-  // подставные заголовки для метрик
   const metricTitles = {
     sortByNumOfChar: "Символов",
     sortByNumOfWord: "Вхождений слова",

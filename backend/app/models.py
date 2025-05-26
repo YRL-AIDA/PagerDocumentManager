@@ -23,15 +23,15 @@ class User(db.Model, UserMixin):
 
     @property
     def is_active(self):
-        return True  # Или логика активации пользователя
+        return True 
 
     @property
     def is_authenticated(self):
-        return True  # Если пользователь залогинен
+        return True
 
     @property
     def is_anonymous(self):
-        return False  # Если пользователь не аноним
+        return False
 
     def get_id(self):
         return str(self.id)

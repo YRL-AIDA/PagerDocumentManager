@@ -6,7 +6,6 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // при монтировании пробуем получить сессию
   useEffect(() => {
     fetch("/api/current_user", { credentials: "include" })
       .then((res) => (res.ok ? res.json() : Promise.resolve(null)))

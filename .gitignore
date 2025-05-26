@@ -5,3 +5,4 @@ temp/
 media
 .idea
 backend/app/uploads/
+backend/.flaskenv

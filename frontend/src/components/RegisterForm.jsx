@@ -34,6 +34,7 @@ export default function RegisterForm() {
     try {
       await register(username, password);
       nav("/", { replace: true });
+      window.location.reload();
     } catch (err) {
       setError(err.message || "Ошибка регистрации");
     }

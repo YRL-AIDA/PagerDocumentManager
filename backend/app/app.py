@@ -8,6 +8,10 @@ from app.api.auth import auth_bp
 from app.api.documents import docs_bp
 from app.api.images import images_bp
 from app.models import User, Document, Report
+from dotenv import load_dotenv
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, '.env'))
 
 def create_app():
     app = Flask(__name__)
@@ -15,7 +19,6 @@ def create_app():
     CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
     db.init_app(app)
     Migrate(app, db)
-    app.config['SECRET_KEY'] = 'какой-то-сложный-секрет'
     
     login_manager = LoginManager()
     login_manager.init_app(app)

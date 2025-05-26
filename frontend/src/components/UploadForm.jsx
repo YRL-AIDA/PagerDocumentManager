@@ -20,6 +20,7 @@ export default function UploadForm(props) {
       })
       .then((res) => {
         const json = JSON.parse(res.data);
+        console.log(json);
         props.addToDataBase(json, name, base64);
       })
       .catch((err) => {
