@@ -5,6 +5,7 @@ Flask==3.1.0
 flask-cors==5.0.1
 Flask-Migrate==4.1.0
 Flask-SQLAlchemy==3.1.1
+Flask-login==0.6.3
 greenlet==3.2.1
 itsdangerous==2.2.0
 Jinja2==3.1.6

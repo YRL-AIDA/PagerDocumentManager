@@ -5,4 +5,10 @@ temp/
 media
 .idea
 backend/app/uploads/
-backend/.flaskenv
+backend/.flaskenv/
+backend/migrations/
+backend/__pycache__
+backend/app/__pycache__
+backend/app/api/__pycache__
+backend/app/services/__pycache__
+backend/app/__init__.pyc
